@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate Romantic Mystery 🫦</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;600&display=swap');
+
+        body {
+            margin: 0; padding: 0;
+            background: radial-gradient(circle, #24243e, #302b63, #0f0c29);
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Outfit', sans-serif; overflow: hidden; color: white;
+        }
+
+        /* --- Floating Particles --- */
+        .bubble {
+            position: absolute; bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%; animation: rise 8s infinite ease-in;
+        }
+        @keyframes rise {
+            to { transform: translateY(-110vh) translateX(40px); opacity: 0; }
+        }
+
+        /* --- Glass Card --- */
+        #card-container {
+            width: 85%; max-width: 380px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px; padding: 40px 20px;
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            transition: all 0.5s ease; position: relative; z-index: 10;
+        }
+
+        /* --- Neon Typing --- */
+        .typing-box {
+            font-size: 22px; font-weight: 600; min-height: 100px;
+            margin-bottom: 25px;
+        }
+
+        .letter {
+            display: inline-block; opacity: 0;
+            animation: letterDrop 0.4s forwards, neon 1.5s infinite alternate;
+        }
+        @keyframes letterDrop {
+            from { transform: scale(2); filter: blur(10px); opacity: 0; }
+            to { transform: scale(1); filter: blur(0); opacity: 1; }
+        }
+        @keyframes neon {
+            from { text-shadow: 0 0 5px #ff4d94; }
+            to { text-shadow: 0 0 20px #ff4d94, 0 0 30px #ff0055; }
+        }
+
+        /* --- Buttons --- */
+        .btn-wrapper { display: flex; flex-direction: column; gap: 12px; opacity: 0; transition: 0.8s; }
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; padding: 14px; border-radius: 12px;
+            cursor: pointer; font-size: 16px; font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #ff4d94; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 77, 148, 0.5); }
+
+        /* --- Vibe Meter --- */
+        .meter-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 25px; overflow: hidden;}
+        #meter-fill { width: 0%; height: 100%; background: linear-gradient(to right, #ff85a1, #ff4d94); transition: 1s; box-shadow: 0 0 15px #ff4d94; }
+
+        /* --- FINAL CARD CELEBRATION --- */
+        .celebrate-title { font-family: 'Dancing Script', cursive; font-size: 48px; color: #ff4d94; animation: heartbeat 1s infinite; }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .firework { position: absolute; width: 5px; height: 5px; border-radius: 50%; animation: explode 2s ease-out infinite; }
+        @keyframes explode {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        .emoji-float { position: absolute; font-size: 25px; animation: floatUp 3s forwards; opacity: 0; }
+        @keyframes floatUp { 0% { bottom: 0; opacity: 1; } 100% { bottom: 500px; opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+    <div id="card-container">
+        <div id="meter-container">
+            <div style="font-size: 10px; margin-bottom: 5px; opacity: 0.6; letter-spacing: 3px;">ROMANCE METER</div>
+            <div class="meter-bg"><div id="meter-fill"></div></div>
+        </div>
+        
+        <div id="typing-area" class="typing-box"></div>
+        <div id="btn-wrapper" class="btn-wrapper"></div>
+    </div>
+
+    <script>
+        // --- 10 Romantic Questions ---
+        const questions = [
+            { q: "Oye suno! Aaj duniya ki sabse haseen ladki ka bday hai, guess karo? 🫦", a: ["Main hi hoon! ✨", "Kaun hai wo? 😉"] },
+            { q: "Uff! Itni hotness... aapko dekh kar AC bhi fail ho jaye! 🔥", a: ["Zyada makkhan mat lagao", "Sachi? 🙈"] },
+            { q: "Ek baat batao, aap mere dil mein bina rent ke kyun rehti ho? 🏠❤️", a: ["Kyunki ye mera ghar hai", "Rent mangoge? 😜"] },
+            { q: "Aapki aankhen itni gehri hain, kahin main doob na jaun? 🌊", a: ["Main bacha lungi", "Doobne hi toh diya hai"] },
+            { q: "Agar main aaj aapko 1000 kisses doon, toh aapka reaction? 💋", a: ["Kam hain.. 😉", "Mana kisne kiya?"] },
+            { q: "Jab aap smile karti ho, toh mera dil 'dhak-dhak' karta hai.. sachi! 💓", a: ["Dikhao kahan? 😉", "Jhoote! 😂"] },
+            { q: "Aap mere liye woh wish ho jo har baar sach hoti hai.. Maanti ho? ✨", a: ["Haan, maanti hoon", "Zyada romantic! 😂"] },
+            { q: "Kya hum hamesha aise hi ladte-jhagadte pyaar karenge? 🤝", a: ["Zaroor! ❤️", "Hamesha ke liye!"] },
+            { q: "Bas 2 sawal aur... kya aap ready ho surprise ke liye? 🎈", a: ["Ek dum! 😍", "Jaldi dikhao!"] },
+            { q: "Ek aakhri baat... aap meri favorite ho! Ab aankhen band karo... 🙈", a: ["Band kar li! 🔒", "Chalo dikhao! 🎉"] }
+        ];
+
+        let step = 0; let answers = [];
+
+        function typeText(text, cb) {
+            const area = document.getElementById('typing-area');
+            const wrapper = document.getElementById('btn-wrapper');
+            area.innerHTML = ""; wrapper.style.opacity = "0";
+            text.split("").forEach((char, i) => {
+                let span = document.createElement('span');
+                span.innerText = char === " " ? "\u00A0" : char;
+                span.className = "letter";
+                span.style.animationDelay = (i * 0.04) + "s";
+                area.appendChild(span);
+            });
+            setTimeout(() => { wrapper.style.opacity = "1"; if(cb) cb(); }, text.length * 40 + 400);
+        }
+
+        function loadStep() {
+            const fill = document.getElementById('meter-fill');
+            const wrapper = document.getElementById('btn-wrapper');
+            fill.style.width = ((step + 1) / questions.length) * 100 + "%";
+            wrapper.innerHTML = "";
+            typeText(questions[step].q, () => {
+                questions[step].a.forEach(txt => {
+                    let b = document.createElement('button');
+                    b.className = "btn"; b.innerText = txt;
+                    b.onclick = () => {
+                        answers.push({ q: questions[step].q, a: txt });
+                        step++;
+                        if (step < questions.length) loadStep();
+                        else showFinal();
+                    };
+                    wrapper.appendChild(b);
+                });
+            });
+        }
+
+        function showFinal() {
+            const card = document.getElementById('card-container');
+            card.innerHTML = `
+                <div class="celebrate-title">Happy Birthday! 🎂</div>
+                <p style="font-size:18px; line-height:1.6;">Aap duniya ki sabse pyaari aur haseen ladki ho. I Love You! ❤️</p>
+                <button class="btn" style="width:100%; background:#ff4d94;" onclick="showReport()">Check Love Report 📜</button>
+            `;
+            setInterval(createFirework, 300);
+            setInterval(createEmoji, 500);
+        }
+
+        function createFirework() {
+            for(let i=0; i<10; i++) {
+                const f = document.createElement('div');
+                f.className = 'firework';
+                f.style.left = '50%'; f.style.top = '50%';
+                f.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
+                f.style.setProperty('--x', (Math.random()-0.5)*400 + 'px');
+                f.style.setProperty('--y', (Math.random()-0.5)*400 + 'px');
+                document.body.appendChild(f);
+                setTimeout(() => f.remove(), 2000);
+            }
+        }
+
+        function createEmoji() {
+            const emojis = ['❤️', '💖', '💋', '🎈', '😚', '✨'];
+            const e = document.createElement('div');
+            e.className = 'emoji-float';
+            e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+            e.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(e);
+            setTimeout(() => e.remove(), 3000);
+        }
+
+        function showReport() {
+            const card = document.getElementById('card-container');
+            card.style.maxHeight = "550px"; card.style.overflowY = "auto";
+            let html = `<div style="margin-bottom:15px; font-weight:bold; color:#ff4d94;">📸 SCREENSHOT OUR MEMORY!</div>`;
+            answers.forEach((item, i) => {
+                html += `<div style="background:rgba(255,255,255,0.05); margin:10px 0; padding:12px; border-radius:12px; text-align:left; font-size:13px;">
+                    <b>${i+1}.</b> ${item.q}<br><span style="color:#ff85a1">Ans: ${item.a}</span>
+                </div>`;
+            });
+            html += `<button class="btn" style="width:100%; margin-top:10px;" onclick="location.reload()">Restart 🔄</button>`;
+            card.innerHTML = html;
+        }
+
+        // Bubbles background
+        for (let i = 0; i < 15; i++) {
+            let b = document.createElement('div');
+            b.className = 'bubble';
+            let size = Math.random() * 50 + 10 + 'px';
+            b.style.width = size; b.style.height = size;
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(b);
+        }
+
+        loadStep();
+    </script>
+</body>
+</html>
